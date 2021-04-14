@@ -15,8 +15,6 @@ function getNode(data, layer, container){
                   .attr('width', width + margin.left + margin.right)
                   .attr('height', height + margin.top + margin.bottom)
                   .append('g')
-
-
     /**
      * 利用d3.hierarchy產生x y的資料
      * 這個函式可以自動算出這些treemap所佔的大小
@@ -24,6 +22,8 @@ function getNode(data, layer, container){
      * d3需要靠總和的占比去推估每個長方形的大小
      * 最後排序一下，會比較好看
      */
+
+     console.log(data);
     var d3ds = d3.hierarchy(data)
         .sum(function (d) { return d.size})
         .sort(function (a, b) { return b.size - a.size})
