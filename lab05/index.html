@@ -12,7 +12,8 @@
         display: inline-block;
         width: 5px;
         height: 75px;
-        background-color: purple;
+        background-color: mediumslateblue;
+        vertical-align: bottom;
       }
       body{
         border: 1px red solid;
@@ -35,9 +36,17 @@
         .filter(function(d,i){
           return (i!=0);
         })
+		.text(function(d) {
+           return d[1];
+         })
         .attr("class", "bar")
         .style("height", function(d) {
-          return d[1] + 'px';
+          return d[1]*5 + 'px';
+        })
+		.style("background-color", function(d, i) {
+            if( i % 2 == 1 ) {
+                return "#f4a460";
+            }
         });
       });
 
