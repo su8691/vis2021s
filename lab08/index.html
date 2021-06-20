@@ -19,13 +19,24 @@
         div {
           font-size: 12pt;
         }
-        
+
         body {
             background-color: rgba(255, 128, 255, 0.1);
         }
 
         video:hover {
             box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+
+        .path {
+          stroke-dasharray: 1000;
+          stroke-dashoffset: 1000;
+          animation: dash 5s linear forwards;
+        }
+        @keyframes dash {
+          to {
+            stroke-dashoffset: 0;
+          }
         }
     </style>
     <script src="https://d3js.org/d3.v6.min.js" charset="utf-8"></script> <!-- v6.5.0 -->
@@ -51,6 +62,16 @@
   		  <source src="3.mp4" type="video/mp4">
   		</video>
     </div>
+	
+	<div>
+      
+      <svg id="svg1" height="450" width="350">
+      </svg>
+      <svg id="svg2" height="450" width="350">
+      </svg>
+      <svg id="svg3" height="450" width="350">
+      </svg>
+    </div>
 
     <div>
       展示區 (姓名)
@@ -60,12 +81,80 @@
       <img width="256" src="./uni5EAD_FZSJSK--GBK1-0.svg">
     </div>
 
-    <div>
-      Drag and Drop 展示區 (接收任何SVG)
-    </div>
-
     <script type="text/javascript">
-      // Your beautiful D3 code will go here
+    var line = d3.line();
+    var first = [
+    "M113 182q1 6 0 13q-8 18 -32 33q-4 1 -5 0q0 -1 3 -3q28 -20 32 -44q1 -3 2 1z",
+	"M127 196q-6 -2 0 -2q49 11 70 29q3 2 3 4q0 3 -3 4q-13 2 -17 -4q-17 -19 -53 -31z",
+	"M131 97q-3 2 -3 1q-2 1 -1 3q5 -3 4 -4z",
+	"M199 79q4 -5 13 -1q4 2 13 7q3 1 4 1q3 3 2 5q-2 3 -6 1q-12 -3 -27 -2q-14 0 -47 5q-1 1 -2 1q-9 0 -23 8q-1 2 -1 7v13q16 -3 24 -3q9 -1 18 -1q5 0 13 11q2 5 6 4q6 6 0 10q-3 1 -6 6q-16 20 -34 31q-13 9 -19 -2q-4 -3 2 -2q4 2 17 -5q25 -14 27 -37q-1 -10 -9 -12q-9 -3 -39 6q0 3 -1 8q-1 6 0 9q5 -1 7 -3q1 -1 5 -2q-1 0 2 -1h10q3 3 -1 5q-9 2 -23 7q0 6 -1 11h4q3 -1 5 -2q2 0 4 -2l1 -1h1q2 -2 5 -2q10 0 14 1q2 3 -5 6q-16 2 -41 9q0 7 -3 6q-6 1 -9 -4q-2 -2 -4 -2q-1 3 -7 -3q-4 -4 0 -8q3 -2 0 -5q-10 -13 -11 -23q1 -4 9 -11q5 -3 1 2q-6 6 -4 10q3 19 9 23q4 2 6 6q1 3 5 3q3 -1 5 1l10 -2v-12q-8 3 -19 4q-4 0 0 -2q1 0 4 -1q11 -3 15 -6q1 -9 1 -18q-17 8 -28 7q-2 -2 1 -3q23 -7 27 -9q-2 -10 -1 -20q-1 1 -2 1t-2 1q-5 1 -1 -1q1 -1 3 -2q1 0 2 -1q-2 -2 -1 -3q-65 16 -84 22q-11 3 -19 1q-3 0 -2 -1q0 -1 3 -2q8 -2 17 -4q105 -26 152 -31q8 1 15 -7z",
+	"M144 -6q4 -1 13 3q5 2 1 7q-2 4 -5 15q-3 7 -5 14q4 -1 12 -2q12 -2 17 -7q4 -3 10 -2t13 5q2 1 1 3t-4 2q-27 2 -51 9q-5 17 -9 25h4q3 -1 5 -2q6 3 3 9q-23 4 -45 11q-4 2 -6 -1q-1 -3 2 -5q33 -9 38 -37q-4 2 -14 4q-10 3 -14 4q0 3 2 12q1 3 2 4q-1 5 -7 5q-2 0 -8 -9q-3 -5 -4 -7q-22 5 -35 5h-4q0 -1 4 -3q4 -1 22 -5q10 -3 12 -4q-3 -12 -11 -25q-2 -3 -1 -4t4 1q15 13 21 24q24 -5 33 -8q2 -7 4 -19q2 -6 3 -10v-1q2 -7 -4 -9q-4 -1 1 -2z"]
+
+    var middle = [
+    "M182 37q8 0 26 29q2 7 -4 8q-5 0 -7 6q-9 29 -25 39q-13 8 -26 -5q-4 3 -5 3t2 -4q1 -1 1 -2q-1 0 -4 1q-24 9 -32 6q-4 -1 1 -2q5 0 10 -2q-5 -7 -12 -12v-1q-4 -1 -2 -5q0 -1 2 -4t3 -5q-2 -5 -6 -19q-2 -11 -3 -16q0 -4 2 -1q5 13 10 32q2 21 16 29q7 -2 11 -5v-11q1 -10 1 -15q-4 2 -15 1q-3 0 0 -1l15 -5q0 -21 -3 -30q-10 4 -15 3t0 -2q37 -13 59 -10z",
+	"M141 45q3 5 6 8q2 3 1 6q-2 4 -1 14l12 -6q2 -4 12 -1q2 1 1 2q0 2 -2 2q-9 2 -23 9q-1 5 -2 14v13q3 0 8 -4l2 -2q4 -4 21 -2q1 1 1 3q0 1 -2 1q-15 2 -26 10q13 11 25 -1q12 -11 20 -52q-1 -15 -14 -19q-11 -3 -39 5z",
+	"M69 32q-1 -3 2 -1q7 8 5 12q-7 15 -11 32q-4 26 -5 63q-1 38 2 49 v2q2 4 2 8q2 3 6 8q7 9 10 13q1 1 -1 3q-2 1 -2 0q-12 -16 -24 -22q-6 -8 6 -11q-5 -50 2 -117q-5 8 -12 20q-11 19 -20 34q-5 7 -2 -1q7 -15 21 -42q9 -18 13 -25q7 -15 8 -25z", 
+	"M197 162q-3 -2 -3 -3q0 -2 3 0q10 6 25 19q2 2 4 3q2 5 8 4q3 3 1 6q-6 1 -14 5q-3 1 -5 1q-29 9 -63 -1q-31 -11 -44 -38q-5 -7 2 -1q38 50 101 36q6 -1 3 -9t-18 -22z",
+	"M198 121q23 4 33 13q3 7 -1 7q-7 2 -10 -4q-6 -8 -22 -14q-6 -2 0 -2z",
+	"M92 158q1 -4 2 1q-5 18 2 23q1 5 -2 7q-3 3 -5 2q-1 0 -1 -4q-3 -15 4 -29z",
+	"M140 131q0 -5 2 0q2 7 9 5q2 0 4 4q1 0 2 1q2 5 0 6q-6 2 -9 -1q-7 -6 -8 -15z" ]
+
+
+
+    var last = [
+    "M71 69q0 -1 2 0q1 7 10 6v1q4 0 4 3t-3 4q-4 1 -5 12q5 -1 18 -6q3 -1 4 -4q0 -2 2 -2q4 2 11 3q2 2 2 3q-1 3 -2 3q-9 5 -19 28q-2 2 2 2q7 -2 13 -2q2 0 2 1v2q0 4 -2 8q-2 2 -4 7q-3 12 -6 18l10 8q9 6 21 15q23 18 47 25h9q3 1 15 1q25 -1 48 8q1 0 0 1q-1 0 -3 1q-10 -1 -20 -1t-25 1q-11 0 -25 -7q-29 -11 -49 -27q-22 -15 -29 -21q-13 26 -31 41q-3 2 0 -1q14 -16 26 -42q-11 -8 -33 0q-14 45 -26 75q-2 2 -1 -1q7 -29 22 -71q11 -37 17 -72q1 -6 -1 -10h-1q-4 -2 0 -10z",
+	"M97 94q-15 6 -19 5q-1 1 -1 3q-10 31 -15 53q7 -1 12 -5t22 4q3 -11 6 -25q2 -7 -12 1q-4 3 -5 1q-2 1 -1 -5q-1 -3 3 -4q2 1 13 -25q1 -3 0 -3q0 -1 -3 0z",
+	"M117 163h3q6 -1 12 -4q14 -5 18 -6q0 -4 -1 -13v-18q-11 4 -25 5q-3 0 0 -2q6 -1 18 -6q4 -2 7 -4q1 -10 0 -19q-1 -3 1 -2q6 4 6 17q11 -5 25 -5q5 0 5 3t-3 2q-15 0 -27 7q-3 20 -2 34q5 -1 18 -3q8 -2 13 -3q2 -3 5 -3q12 0 17 3q2 1 2 2q0 4 -4 2h-9q-4 0 -13 1q-28 4 -52 13q-7 3 -14 1q-4 -1 0 -2z",
+	"M167 28q1 -2 5 -1q7 3 14 3q4 0 5 3t-3 3q-2 1 -4 1q-11 3 -23 4q-17 4 -44 10q-6 2 -2 -1h1h-2q-7 2 -18 4q-17 4 -34 7q-15 5 -21 0q-1 0 1 -1q72 -13 114 -24q9 -2 11 -8z",
+	"M163 65q9 -1 21 0q2 0 2 1v2q-1 3 -3 3h-2q-11 1 -23 8q-8 4 -24 10q-6 2 -8 3q-3 0 0 -2q23 -11 35 -21q-1 -3 2 -4z",
+	"M99 10q15 3 30 14q1 1 0 3q0 3 -3 3q-5 2 -21 -1q-2 0 -3 -1q0 -1 2 -3q4 -4 -7 -13q-2 -2 2 -2z"]
+
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+async function first_N(){
+    for (var i = 0; i < first.length; i++) {
+      d3.select("#svg1")
+      .append('path')
+      .attr('class', 'path')
+      .attr('fill', "black")
+      .attr('stroke', "black")
+      .attr('stroke-width', "7")
+      .attr('d', first[i]);
+      console.log(i);
+      await sleep(500);
+    }
+}
+first_N()
+
+async function middle_N(){
+    for (var j = 0; j < middle.length; j++) {
+        d3.select("#svg2")
+        .append('path')
+        .attr('class', 'path')
+        .attr('fill', "none")
+        .attr('stroke', "black")
+        .attr('stroke-width', "12")
+        .attr('d', middle[j]);
+        console.log(j);
+        await sleep(500);
+    }
+}
+middle_N()
+
+async function last_N(){
+    for (var k = 0; k < last.length; k++) {
+      d3.select("#svg3")
+      .append('path')
+      .attr('class', 'path')
+      .attr('fill', "none")
+      .attr('stroke', "black")
+      .attr('stroke-width', "12")
+      .attr('d', last[k]);
+      console.log(k);
+      await sleep(500);
+    }
+}
+last_N()
+
+
     </script>
   </html>
-  
