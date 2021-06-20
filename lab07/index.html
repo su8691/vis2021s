@@ -28,7 +28,7 @@
             box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
         }
     </style>
-    <script src="https://d3js.org/d3.v6.min.js" charset="utf-8"></script> <!-- v6.5.0 -->
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script> <!-- v6.5.0 -->
 </head>
 <body>
     <h1>
@@ -83,20 +83,18 @@
 
   <script type="text/javascript">
     // Your beautiful D3 code will go here
-    //var line1 = d3.line().curve(d3.curveCardinalClosed);
-    //var data1 = [[30, 150], [65, 240], [150, 270], [240, 240], [270, 150], [240, 65], [150, 30], [65, 65]];
     var circle = "M146.677,24.8c-70.741,0-122.115,65.732-122.109,122.938c0.008,86.148,60.116,126.52,122.109,126.528c79.252,0.012,129.153-52.215,129.153-126.528C275.83,83.24,224.169,24.8,146.677,24.8z";
 
 
     var da1 = "", da2 = "", da3 = "";
-    d3.text('uni9EC3_FZSJSK--GBK1-0.svg', function (ndata) {
+    d3.text('./uni9EC3_FZSJSK--GBK1-0.svg', function (ndata) {
       splitPath(da1, ndata, '#name1');
     })
-    d3.text('uni5072_FZSJSK--GBK1-0.svg', function (ndata) {
+    d3.text('./uni5072_FZSJSK--GBK1-0.svg', function (ndata) {
       splitPath(da2, ndata, '#name2');
     })
 
-    d3.text('uni5EAD_FZSJSK--GBK1-0.svg', function (ndata) {
+    d3.text('./uni5EAD_FZSJSK--GBK1-0.svg', function (ndata) {
       splitPath(da3, ndata, '#name3');
     })
 
