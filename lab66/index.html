@@ -1,14 +1,270 @@
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
-  <head>
+
+<html>
+
+<head>
     <meta charset="utf-8">
-    <title>D3 Page Template</title>
-    <script src="http://d3js.org/d3.v6.min.js" charset="utf-8"></script> <!-- v6.5.0 -->
+
+    <style>
+        html,
+        body {
+            height: 200%;
+        }
+        #training-section, #testing-section {
+            height: 100%;
+			overflow: hidden;
+        }
+
+        #train-vs-test {
+            height: 100%;
+            position: fixed;
+            max-width: 100%;
+        }
+
+        .padding {
+            height: 100%;
+        }
+
+        #right {
+            width: 60%;
+            height: 100%;
+            position: relative;
+            float: right;
+        }
+		
+        #left {
+            width: 40%;
+            height: 100%;
+            float: left;
+        }
+		
+		 #leftpic1 {
+            width: 100%;
+            height: 100%;
+            float: left;
+        }
+
+        #leftpic2 {
+            width: 50%;
+            height: 100%;
+            float: left;
+        }
+
+        #leftpic3 {
+            width: 50%;
+            height: 80%;
+            float: left;
+        }
+		
+    </style>
 </head>
+
 <body>
-    <script type="text/javascript">
-      // Your beautiful D3 code will go here
-    </script>
-  </body>
+
+
+        <div id="right">
+            <div id="train-vs-test"></div>
+        </div>
+
+        <div id="left">
+            <div id="training-section">
+			    <h1>澳洲天氣站的氣象預測</h1>
+				<h1>訓練資料集: 700筆</h1>
+				<br>
+				<h2>資料內容</h2>
+				<br>
+				<h3 style="margin-bottom: 50px;">
+                以預測明天是否降雨為目標，特徵包含今天是否降雨、降雨量、蒸發量、日照、<br>
+				不同時段的風速與風向、溫度。<br>
+				資料來源:
+				<a href="https://www.kaggle.com/jsphyg/weather-dataset-rattle-package">Rain in Australia</a>
+				<br><br>
+				Date<br><br>
+
+				Location: The common name of the location of the weather station<br><br>
+
+				MinTemp: The minimum temperature in degrees celsius<br><br>
+
+				MaxTemp: The maximum temperature in degrees celsius<br><br>
+
+				Rainfall: The amount of rainfall recorded for the day in mm<br><br>
+
+				Evaporation: The so-called Class A pan evaporation (mm) in the 24 hours to 9am<br><br>
+
+				Sunshine: The number of hours of bright sunshine in the day.<br><br>
+
+				WindGustDir: The direction of the strongest wind gust in the 24 hours to midnight<br><br>
+
+				WindGustSpeed: The speed (km/h) of the strongest wind gust in the 24 hours to midnight<br><br>
+
+				WindDir9am: Direction of the wind at 9am<br><br>
+
+				WindDir3pm: Direction of the wind at 3pm<br><br>
+
+				WindSpeed9am: Wind speed (km/hr) averaged over 10 minutes prior to 9am<br><br>
+
+				WindSpeed3pm: Wind speed (km/hr) averaged over 10 minutes prior to 3pm<br><br>
+
+				Humidity9am: Humidity (percent) at 9am<br><br>
+
+				Humidity3pm: Humidity (percent) at 3pm<br><br>
+
+				Pressure9am: Atmospheric pressure (hpa) reduced to mean sea level at 9am<br><br>
+
+				Pressure3pm: Atmospheric pressure (hpa) reduced to mean sea level at 3pm<br><br>
+
+				Cloud9am: Fraction of sky obscured by cloud at 9am. This is measured in "oktas", which are a unit of eigths. It records how many eigths of the sky are obscured by cloud. A 0 measure indicates completely clear sky whilst an 8 indicates that it is completely overcast.<br><br>
+
+				Cloud3pm: Fraction of sky obscured by cloud (in "oktas": eighths) at 3pm. See Cload9am for a description of the values<br><br>
+
+				Temp9am: Temperature (degrees C) at 9am<br><br>
+
+				Temp3pm: Temperature (degrees C) at 3pm<br><br>
+
+				RainToday: Boolean: 1 if precipitation (mm) in the 24 hours to 9am exceeds 1mm, otherwise 0<br><br>
+
+				RainTomorrow: The amount of next day rain in mm. Used to create response variable RainTomorrow. A kind of measure of the "risk".<br>
+				
+				</h3>
+				
+				<br>
+				<h2>資料前處理</h2>
+				<br>
+				<h3 style="margin-bottom: 50px;">
+				將'Data'、'Loaction'等不影響明日是否會下雨的因素刪除。<br>
+				而'WindGustDir', 'WindDir9am', 'WindDir3pm'為風向，<br>
+				由於是以文字表示，難轉換成數字，因此先刪除。<br>
+				最後將明日及今日是否會下雨的欄位，改成1/0表示。
+                </h3>
+				
+				<div>
+					<img src="media/1.png" id="leftpic1">
+				</div>
+				
+				
+            </div>
+            <div id="testing-section">
+				<h1>測試資料集: 300筆</h1>
+				<br><br>
+				<h2>預測結果</h2>
+				<h3 style="margin-bottom: 50px;">
+				藍色為明日不下雨、綠色為明日下雨<br>
+				準確率達81.7%
+				</h3>
+				<br><br>
+				
+				<div>
+					<img src="media/2.png" id="leftpic1">
+				</div>
+				<div>
+					<img src="media/3.png" id="leftpic1">
+				</div>
+            </div>
+			
+        </div>
+        
+        
+        
+        
+        <script src="./lib/d3.v3.min.js"></script>
+        <script src="./lib/binarydecisiontree.min.js"></script>
+
+        <script>
+            var Lipsum = "";
+
+            window.onload = function () {
+                function resizeRight(){
+                    d3.select("#train-vs-test")
+                        .style("width", d3.select("#right").node().clientWidth + "px")
+                    ;
+                }
+
+                resizeRight();
+
+                d3.select(window)
+                    .on("resize", function(){ resizeRight() })
+                ;
+
+
+                /**
+                 * 填版面，不然全部都是白色的很單調
+                 * 這兩個 section 是要讓同學放說明資料和圖片的地方
+                */
+				/*
+                d3.select("#training-section")
+                    .selectAll("p")
+                    .data(d3.range(1, 10))
+                    .enter()
+                    .append("p")
+                    .text(Lipsum)
+                ;
+
+                d3.select("#testing-section")
+                    .selectAll("p")
+                    .data(d3.range(1, 10))
+                    .enter()
+                    .append("p")
+                    .text(Lipsum)
+                ;
+				
+				d3.select("#training-section")
+                    .selectAll("img")
+					.data(d3.range(1, 4))
+					.enter()
+					.append("img")
+					.attr("src", function(d){ return "media/" + d + ".png"})
+                    .style('height', '350px')
+                    .style('width', '350px')
+                ;
+
+                d3.select("#testing-section")
+                    .selectAll("img")
+					.data(d3.range(4, 7))
+					.enter()
+					.append("img")
+					.attr("src", function(d){ return "media/" + d + ".png"})
+                    .style('height', '350px')
+                    .style('width', '350px')
+                ;
+				
+				
+				*/
+                var bdt = new BinaryDecisionTree({
+                    el: "#train-vs-test",
+                    trainingSection: "#training-section",
+                    testSection: "#testing-section",
+                    
+					/**
+                     * 預設會讓小球在上方排排站
+                     * 如果不要排排站的話，必須要把這個 paramater 設成 false
+                     * 如果要排排站的話，直接註解掉這行就行
+                    */
+                    //flood: false
+                });
+
+                bdt.setDataFromJson("./dataset.json", function(){
+                    bdt.install();
+                    bdt.play();
+                })
+
+                /**
+                 * or
+                 * bdt.setDataFromObject({ 
+                 *  tree_data: tree_data,
+                 *  tree_training_set: tree_training_set,
+                 *  tree_stats: tree_stats, 
+                 *  tree_test_set: tree_test_set, 
+                 *  test_stats : test_stats
+                 * })
+                 * 同步函式，不需要 callback
+                 * bdt.install();
+                 * bdt.play();
+                */
+            }
+        </script>
+
+</body>
+
+
+
 </html>
-  
