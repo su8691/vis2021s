@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html>
 
@@ -6,16 +6,21 @@
     <meta charset="utf-8">
 
     <style>
+
+	
         html,
         body {
+			background-color: rgba(,255,204,0.2);
             height: 200%;
         }
         #training-section, #testing-section {
+			background-color: rgba(255,255,255,0.5);
             height: 100%;
 			overflow: hidden;
         }
 
         #train-vs-test {
+			background-color: rgba(255,255,255,0.5);
             height: 100%;
             position: fixed;
             max-width: 100%;
@@ -26,6 +31,7 @@
         }
 
         #right {
+			background-color: rgba(255,255,255,0.5);
             width: 60%;
             height: 100%;
             position: relative;
@@ -33,6 +39,7 @@
         }
 		
         #left {
+			background-color: rgba(255,255,255,0.7);
             width: 40%;
             height: 100%;
             float: left;
@@ -56,10 +63,57 @@
             float: left;
         }
 		
+*{
+  font-family: 'Kumar One Outline', cursive;
+}
+
+
+
+
+
+.neon-effect{
+  color:#fff;
+  letter-spacing:2px;
+}
+.liti{
+    /* 文字左上设置多层浅色阴影，右下设置多层暗色阴影，文字色同背景色 */
+    background-color: #d2d500;
+    color: #d2d500;
+    text-shadow: -1px -1px 0px #e6e600,-2px -2px 0px #e6e600,
+    -3px -3px 0px #e6e600,1px 1px 0px #bfbf00,2px 2px 0px #bfbf00,3px 3px 0px #bfbf00;
+}
+
+
+ 
+
+.neon-effect:nth-of-type(1){
+  text-shadow:
+    0 0 5px rgba(67,232,216, 1),
+    0 0 10px rgba(67,232,216, 1),
+    0 0 20px rgba(67,232,216, 1),
+    0 0 40px rgba(67,232,216, 1);
+  animation:neon-shine 2s linear infinite;
+  
+}
+.neon-effect:nth-of-type(2){
+  text-shadow:
+    0 0 5px rgba(247, 245, 41,.1),
+    0 0 10px rgba(247, 245, 41,1),
+    0 0 20px rgba(247, 245, 41,1),
+    0 0 40px rgba(247, 245, 41,1);
+   animation:neon-shine 2s 1s linear infinite;
+}
+@keyframes neon-shine{
+  0%{opacity:1;}
+  90%{opacity:0;}
+  100%{
+  color:#232323;}
+}
     </style>
 </head>
 
-<body>
+<body background="media/1.jpg">
+
 
 
         <div id="right">
@@ -67,18 +121,22 @@
         </div>
 
         <div id="left">
-            <div id="training-section">
-			    <h1>澳洲天氣站的氣象預測</h1>
+            <div class="centered" id="training-section">
+			    <font style="text-shadow:0px 0px 15px #00FF00;" size="7">澳洲天氣站的氣象預測</font>
+				
 				<h1>訓練資料集: 700筆</h1>
-				<br>
-				<h2>資料內容</h2>
+				<span style="background-color:#FFFFFF">
+				<div style="border-width: 3px ; width: 150px; height: 30px ; padding: 5px; text-align: center;  border-radius: 4px;">
+				<h2 style="border:2px red dotted;">資料內容</h2>
+				</div>
 				<br>
 				<h3 style="margin-bottom: 50px;">
                 以預測明天是否降雨為目標，特徵包含今天是否降雨、降雨量、蒸發量、日照、<br>
 				不同時段的風速與風向、溫度。<br>
-				資料來源:
+				資料來源:				
 				<a href="https://www.kaggle.com/jsphyg/weather-dataset-rattle-package">Rain in Australia</a>
 				<br><br>
+				
 				Date<br><br>
 
 				Location: The common name of the location of the weather station<br><br>
@@ -125,13 +183,14 @@
 
 				RainTomorrow: The amount of next day rain in mm. Used to create response variable RainTomorrow. A kind of measure of the "risk".<br>
 				
-				</h3>
+				
 				
 				<br>
-				<h2>資料前處理</h2>
+				<div style="border-width: 3px ; width: 150px; height: 30px ; padding: 5px; text-align: center;  border-radius: 4px;">
+				<h2 style="border:2px red dotted;">資料前處理</h2></div>
 				<br>
 				<h3 style="margin-bottom: 50px;">
-				將'Data'、'Loaction'等不影響明日是否會下雨的因素刪除。<br>
+				將'Date'、'Loaction'等不影響明日是否會下雨的因素刪除。<br>
 				而'WindGustDir', 'WindDir9am', 'WindDir3pm'為風向，<br>
 				由於是以文字表示，難轉換成數字，因此先刪除。<br>
 				最後將明日及今日是否會下雨的欄位，改成1/0表示。
@@ -145,10 +204,11 @@
             </div>
             <div id="testing-section">
 				<h1>測試資料集: 300筆</h1>
-				<br><br>
-				<h2>預測結果</h2>
+				
+				<div style="border-width: 3px ; width: 150px; height: 30px ; padding: 5px; text-align: center;  border-radius: 4px;">
+				<h2 style="border:2px yellow dotted;">預測結果</h2></div><br>
 				<h3 style="margin-bottom: 50px;">
-				藍色為明日不下雨、綠色為明日下雨<br>
+				藍色為明日不下雨、綠色為明日下雨
 				準確率達81.7%
 				</h3>
 				<br><br>
@@ -162,7 +222,7 @@
             </div>
 			
         </div>
-        
+        </span>
         
         
         
